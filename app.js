@@ -4,6 +4,8 @@ const cookieParser = require("cookie-parser");
 const debug = require("debug")("express:server");
 const bodyParser = require("body-parser");
 const app = express();
+
+const auth = require("./auth");
 //const dbLayer = require("./config/db");
 //const fetch = require("node-fetch");
 const cors = require("cors");
@@ -16,7 +18,10 @@ app.use("/inc", express.static(path.join(__dirname, "inc")));
 
 app.use(cors());
 
+app.use(auth);
+
 app.get("/getUser", async (req, res) => {
+	console.log(req.auth);
 	if (!req.headers.authorization) {
 		return res.status(403).json({ error: "credentials missing!" });
 	} else {
