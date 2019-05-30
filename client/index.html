@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>Document</title>
+		<script>
+			const user = "bob";
+			const pwd = "password";
+			const encodedLogin = btoa(`${user}:${pwd}`);
+
+			(async () => {
+				const response = await fetch("http://localhost:9000/getUser", {
+					headers: { Authorization: `Basic ${encodedLogin}` }
+				});
+				const data = await response.json();
+				console.log(data);
+			})();
+		</script>
+	</head>
+	<body></body>
+</html>

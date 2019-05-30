@@ -5,7 +5,7 @@ const debug = require("debug")("express:server");
 const bodyParser = require("body-parser");
 const app = express();
 //const dbLayer = require("./config/db");
-const fetch = require("node-fetch");
+//const fetch = require("node-fetch");
 const cors = require("cors");
 
 const port = 9000;
@@ -16,24 +16,19 @@ app.use("/inc", express.static(path.join(__dirname, "inc")));
 
 app.use(cors());
 
-app.get("/getToilets", async (req, res) => {
-	const response = await fetch(
-		"http://data.ottawa.ca/dataset/e883ac3c-5e99-468e-b9d5-c2bf0015af68/resource/45f4c2ad-327e-4eef-8d7c-1772fc3d8e56/download/publicwashrooms.json"
-	);
-	const data = await response.json();
-
-	res.json(data);
+app.get("/getUser", async (req, res) => {
+	if (!req.headers.authorization) {
+		return res.status(403).json({ error: "credentials missing!" });
+	} else {
+		let up = req.headers.authorization.split(" ")[1];
+		up = Buffer.from(up, "base64").toString();
+		up = up.split(":");
+		const user = up[0];
+		const pass = up[1];
+		let data = { username: user };
+		res.json(data);
+	}
 });
-app.get("/getMuseums", async (req, res) => {
-	const response = await fetch(
-		"http://data.ottawa.ca/dataset/acbcf944-95c7-4777-a678-1987cc8bcc37/resource/395942ba-87bd-41e3-b6d9-0a6ef17712e1/download/museums-2010.json"
-	);
-	const data = await response.json();
-
-	res.json(data);
-});
-
-//app.use("/api/addressBook", addressBookRouter);
 
 app.listen(port, function() {
 	//dbLayer.init();
